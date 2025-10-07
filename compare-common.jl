@@ -1,5 +1,5 @@
 using RationalFunctionApproximation, ComplexRegions
-using Latexify, CairoMakie, LaTeXStrings, JLD2
+using CairoMakie, LaTeXStrings, JLD2, PrettyTables
 using Logging
 global_logger(ConsoleLogger(stderr, Logging.Error))
 
@@ -16,7 +16,7 @@ function validate(r, fun, z, disallow)
         zp, ρ = residues(r)
         keep = @. abs(ρ) > 10eps(T)
         disallowed[k] = any(disallow.(zp[keep]))
-        err[k] = maximum(abs, y - r.(z))
+        err[k] = maximum(abs, filter(!isnan, y - r.(z)))
         if !disallowed[k] && (err[k] < err[best])
             best = k
         end
@@ -71,7 +71,7 @@ function make_plots(bary, thiele)
     for i in 1:6
         push!(ax, Axis(fig[pos[i]...],  yscale=log10, title=bary[i].desc))
         println(bary[i].desc)
-        for (result, label, color) in zip([bary[i], thiele[i]], ["AAA", "TCF"], Makie.wong_colors()[1:2])
+        for (result, label, color) in zip([bary[i], thiele[i]], ["AAA", "TCF"], Makie.Cycled.(1:2))
             bst = result.best
             scatterlines!(ax[i], result.deg[1:bst], result.err[1:bst]; color, markersize=6, alpha=0.5, label=label)
             hlines!(ax[i], [result.discrete]; linestyle=:dash, color, linewidth=2)
@@ -84,9 +84,14 @@ function make_plots(bary, thiele)
     return fig
 end
 
-function comparison_table(bary, thiele)
+function comparison_table(cases, bary, thiele)
     tb = [b.time/1e6 for b in bary]
     tt = [t.time/1e6 for t in thiele]
     ratios = tb ./ tt
-    return latexify(round.([tb tt ratios], digits=1))
+    return pretty_table(
+    hcat([t.desc for t in cases], tb, tt, ratios),
+    column_labels = ["Case", "AAA (msec)", "TCF (msec)", "Ratio"],
+    formatters = [fmt__printf("%.1f", 2:3), fmt__printf("%.1f", [4])],
+    backend=:latex
+    )
 end
