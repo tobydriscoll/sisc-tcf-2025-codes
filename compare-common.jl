@@ -70,7 +70,6 @@ function make_plots(bary, thiele)
     ax = []
     for i in 1:6
         push!(ax, Axis(fig[pos[i]...],  yscale=log10, title=bary[i].desc))
-        println(bary[i].desc)
         for (result, label, color) in zip([bary[i], thiele[i]], ["AAA", "TCF"], Makie.Cycled.(1:2))
             bst = result.best
             scatterlines!(ax[i], result.deg[1:bst], result.err[1:bst]; color, markersize=6, alpha=0.5, label=label)
@@ -89,9 +88,9 @@ function comparison_table(cases, bary, thiele)
     tt = [t.time/1e6 for t in thiele]
     ratios = tb ./ tt
     return pretty_table(
-    hcat([t.desc for t in cases], tb, tt, ratios),
-    column_labels = ["Case", "AAA (msec)", "TCF (msec)", "Ratio"],
-    formatters = [fmt__printf("%.1f", 2:3), fmt__printf("%.1f", [4])],
-    backend=:latex
+        hcat([t.desc for t in cases], tb, tt, ratios),
+        column_labels = ["Case", "AAA (msec)", "TCF (msec)", "Ratio"],
+        formatters = [fmt__printf("%.1f", 2:3), fmt__printf("%.1f", [4])],
+        backend=:latex
     )
 end
