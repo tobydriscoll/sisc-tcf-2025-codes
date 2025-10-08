@@ -34,5 +34,5 @@ fig = make_plots(bary, thiele)
 # save("comparison-interval.pdf", fig)
 
 ##
-println(comparison_table(bary, thiele))
+println(comparison_table(test_cases,bary, thiele))
 fig
