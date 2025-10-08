@@ -20,7 +20,7 @@ test_cases = [
 
 ##
 # Run experiments
-bary, thiele = run_experiments(test_cases, domain, validation_points, sample_points, disallow; T, max_degree);
+bary, thiele = run_experiments(test_cases, domain, sample_points, sample_points, disallow; T, max_degree);
 # @save "comparison-circle-results.jld2" bary thiele
 
 # @load "comparison-circle-results.jld2"
