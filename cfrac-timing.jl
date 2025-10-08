@@ -47,7 +47,7 @@ println("real results")
 pretty_table(
     hcat(25:5:50, t1r, t2r, t1r ./ t2r),
     column_labels = ["n", "eval1 (ns)", "eval2 (ns)", "ratio"],
-    formatters = [fmt__printf("%.1f", 2:3), fmt__printf("%.1f%", [4])],
+    formatters = [fmt__printf("%.1f", 2:3), fmt__printf("%.1f", [4])],
 )
 
 t1c = []
@@ -61,7 +61,7 @@ println("\ncomplex results")
 pretty_table(
     hcat(25:5:50, t1c, t2c, t1c ./ t2c),
     column_labels = ["n", "eval1 (ns)", "eval2 (ns)", "ratio"],
-    formatters = [fmt__printf("%.1f", 2:3), fmt__printf("%.1f%", [4])],
+    formatters = [fmt__printf("%.1f", 2:3), fmt__printf("%.1f", [4])],
 )
 
 ##
